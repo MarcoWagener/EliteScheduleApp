@@ -1,8 +1,6 @@
 (function () {
 	'use strict';
 
-	console.log('entering');
-
 	angular.module('eliteApp')
 		.controller('TeamsCtrl', ['eliteApi', TeamsCtrl]);
 

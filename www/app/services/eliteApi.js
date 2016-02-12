@@ -2,21 +2,34 @@
 	'use strict';
 
 	angular.module('eliteApp')
-		.factory('eliteApi', ['$http', '$q', '$ionicLoading', eliteApi]);
+		.factory('eliteApi', ['$http', '$q', '$ionicLoading', 'CacheFactory', eliteApi]);
 
-	var currentLeagueId;
+	function eliteApi($http, $q, $ionicLoading, CacheFactory) {
+		var currentLeagueId;
 
-	function eliteApi($http, $q, $ionicLoading) {
+		self.leaguesCache = CacheFactory.get("leaguesCache");
+		self.leagueDataCache = CacheFactory.get("leagueDataCache");
+
 		function getLeagues() {
-			var deferred = $q.defer();
+			var deferred = $q.defer(),
+				cacheKey = "leagues",
+				leaguesData = self.leaguesCache.get(cacheKey);
 
-			$http.get("http://elite-schedule.net/api/leaguedata")
-				.success(function(data) {
-					deferred.resolve(data);
-				})
-				.error(function() {										
-					deferred.reject();
-				});		
+			if(leaguesData) {
+				console.log("Found data inside cache", leaguesData);
+				deferred.resolve(leaguesData);
+			}
+			else {
+				$http.get("http://elite-schedule.net/api/leaguedata")
+					.success(function(data) {
+						self.leaguesCache.put(cacheKey, data);
+
+						deferred.resolve(data);
+					})
+					.error(function() {										
+						deferred.reject();
+					});	
+			}	
 
 			return deferred.promise;
 		}

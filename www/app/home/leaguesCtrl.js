@@ -10,7 +10,7 @@
 		eliteApi.getLeagues()
 			.then(function(data) {
 				vm.leagues = data;
-		});
+		});  
 		
 		vm.selectLeague = function(leagueId) {
 			eliteApi.setLeagueId(leagueId);
