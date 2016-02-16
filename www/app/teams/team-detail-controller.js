@@ -2,22 +2,22 @@
 	'use strict';
 
 	angular.module('eliteApp')
-		.controller('teamDetailCtrl', ['$stateParams', '$ionicPopup', 'eliteApi', teamDetailCtrl]);
+		.controller('teamDetailCtrl', ['$stateParams', '$ionicPopup', 'eliteApi', 'myTeamsService', teamDetailCtrl]);
 
-	function teamDetailCtrl($stateParams, $ionicPopup, eliteApi) {
+	function teamDetailCtrl($stateParams, $ionicPopup, eliteApi, myTeamsService) {
 		var vm = this;
 		
 		vm.teamId = Number($stateParams.id);
 
 		eliteApi.getLeagueData()
 			.then(function(data) {
-				var team = _.chain(data.teams)
+				vm.team = _.chain(data.teams)
 		        			.map("divisionTeams")
 							.flatten()
 							.find({"id": vm.teamId})
-		            		.value();
-							
-				vm.teamName = team.name;
+		            		.value();	            			
+
+				vm.teamName = vm.team.name;
 
 				vm.games = _.chain(data.games)					
 							.filter(isTeamInGame)
@@ -70,11 +70,17 @@
 					template: 'Are you sure you want to unfollow?'
 				})
 				.then(function(res) {
+					console.log(res);
+
 					if(res) {
 						vm.following = false;
+
+						myTeamsService.unFollowTeam(vm.teamId.toString());
 					}
 					else {
 						vm.following = true;
+
+						myTeamsService.followTeam(vm.team);
 					}
 				});
 			}
