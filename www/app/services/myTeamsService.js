@@ -9,10 +9,15 @@
 
 		self.myTeamsCache = CacheFactory.get("myTeamsCache");
 
-		function followTeam(team) {
-			console.log('Following: ', team);
+		function followTeam(team, league) {
+			var teamCacheModel = {
+				id: team.id,
+				name: team.name,
+				leagueId: league.id,
+				leagueName: league.name
+			};
 
-			self.myTeamsCache.put(team.id.toString(), team);
+			self.myTeamsCache.put(team.id.toString(), teamCacheModel);
 		}
 
 		function unFollowTeam(teamId) {
@@ -34,7 +39,7 @@
 		function isFollowingTeam(teamId) {
 			var team = self.myTeamsCache.get(teamId);
 
-			return team;
+			return team === undefined ? false : true;
 		}
 
 		return {

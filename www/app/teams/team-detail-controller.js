@@ -11,6 +11,8 @@
 
 		eliteApi.getLeagueData()
 			.then(function(data) {
+				vm.league = data.league;
+
 				vm.team = _.chain(data.teams)
 		        			.map("divisionTeams")
 							.flatten()
@@ -61,28 +63,38 @@
 				return "";
 			}
 		}
+		
+		vm.following = myTeamsService.isFollowingTeam(vm.teamId);
 
-		vm.following = true;
+		vm.showCache = function(){
+			console.log(myTeamsService.getFollowedTeams());
+		}
+
 		vm.toggleFollow = function() {
 			if(!vm.following) {
 				$ionicPopup.confirm({
-					title: 'Unfollow?',
-					template: 'Are you sure you want to unfollow?'
+					template: 'Are you sure you want to unfollow?',
+				    buttons: [
+				      { 
+				      	text: 'Cancel',
+				      	type: 'button',
+				      	onTap: function(e) {
+				      		vm.following = true;
+				        	myTeamsService.followTeam(vm.team, vm.league);
+				      	}
+				      },
+				      {
+				        text: '<b>Unfollow</b>',
+				        type: 'button-positive',
+				        onTap: function(e) {
+				        	myTeamsService.unFollowTeam(vm.teamId.toString());
+				        }
+				      }
+				    ]
 				})
-				.then(function(res) {
-					console.log(res);
-
-					if(res) {
-						vm.following = false;
-
-						myTeamsService.unFollowTeam(vm.teamId.toString());
-					}
-					else {
-						vm.following = true;
-
-						myTeamsService.followTeam(vm.team);
-					}
-				});
+			}
+			else {
+				myTeamsService.followTeam(vm.team, vm.league);
 			}
 		};
 	};

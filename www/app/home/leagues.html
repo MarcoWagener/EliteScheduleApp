@@ -1,6 +1,9 @@
+<div class="bar bar-subheader bar-energized">
+	<h2 class="title">Leagues</h2>
+</div>
+
 <ion-view ng-controller="LeaguesCtrl as vm">
 	<ion-content class="has-header">
-		<h1>Leagues</h1>
 		<div class="list">
 			<a class="item item-icon-right" ng-repeat="league in vm.leagues"
 				ng-click="vm.selectLeague(league.id)">

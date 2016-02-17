@@ -10,9 +10,9 @@
 		vm.myTeams = myTeamsService.getFollowedTeams();
 
 		vm.goToTeam = function(team) {
-			eliteApi.setLeagueId(team.teamId);
+			eliteApi.setLeagueId(team.leagueId);
 
-			$state.go("app.team-detail", { id: team.teamId })
+			$state.go("app.team-detail", { id: team.id })
 		};
 	};
 })();

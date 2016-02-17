@@ -42,7 +42,8 @@ angular.module("eliteApp", ["ionic", "angular-cache"])
         "tab-myteams": {
           templateUrl: 'app/home/myteams.html'   
         }
-      }      
+      },
+      cache: false  
     })           
     .state('app', {
       url: "/app",

@@ -40,7 +40,6 @@
 
 		function getLeagueId() {
 			var id = self.staticCache.get("currentLeagueId");
-			console.log("in get leaugeId", id);
 			return id;
 		}
 
@@ -75,9 +74,14 @@
 			return deferred.promise;
 		}
 
-		function getLeagueData() {
+		function getLeagueData(forceRefresh) {
+			if(typeof forceRefresh === "undefined") { forceRefresh = false; }
+
 			var deferred = $q.defer(),
 				cacheKey = "leagueData-" + getLeagueId(),
+				leagueData = null;
+
+			if(!forceRefresh)
 				leagueData = self.leagueDataCache.get(cacheKey);
 
 			if(leagueData) {
